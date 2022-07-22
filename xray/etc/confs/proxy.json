@@ -2,35 +2,23 @@
     "outbounds": [
         {
             "tag": "proxy",
-            "protocol": "VLESS",
+            "protocol": "trojan",
             "settings": {
-                "vnext": [
+                "servers": [
                     {
-                        "address": "1.1.1.1",
+                        "address": "x.x.x.x",
                         "port": 443,
-                        "users": [
-                            {
-                                "id": "00000000-0000-0000-0000-000000000000",
-                                "alterId": 0,
-                                "email": "t@t.tt",
-                                "security": "none",
-                                "encryption": "none",
-                                "flow": "xtls-rprx-splice"
-                            }
-                        ]
+                        "password": "xxxxxxx"
                     }
-                ],
-                "servers": null,
-                "response": null
+                ]
             },
             "streamSettings": {
                 "network": "tcp",
-                "security": "xtls",
-                "xtlsSettings": {
+                "security": "tls",
+                "tlsSettings": {
                     "allowInsecure": false,
-                    "serverName": "one.one.one.one"
+                    "serverName": "xxxxxxx"
                 },
-                "tcpSettings": null,
                 "sockopt": {
                     "domainStrategy": "UseIPv4"
                 }

@@ -110,10 +110,28 @@ set_perm  /data/adb/xray/scripts/xray.service    0  0  0755
 # stop service
 /data/adb/xray/scripts/xray.service stop
 
+# download and install lastest Loyalsodier's geo.dat files
+if [ -x "$(which wget)" ] ; then
+  wget "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" -O "/data/adb/xray/geosite.dat" >&2
+  wget "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip-only-cn-private.dat" -O "/data/adb/xray/geoip.dat" >&2
+elif [ -x "$(which curl)" ]; then
+  curl "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" -kLo "/data/adb/xray/geosite.dat" >&2
+  curl "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip-only-cn-private.dat" -kLo "/data/adb/xray/geoip.dat" >&2
+elif [ -x "/data/adb/magisk/busybox" ] ; then
+  /data/adb/magisk/busybox wget "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" -O "/data/adb/xray/geosite.dat" >&2
+  /data/adb/magisk/busybox wget "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip-only-cn-private.dat" -O "/data/adb/xray/geoip.dat" >&2
+else
+  ui_print "Error: Could not find curl or wget, please install one. Using default geo.dat files instead of Loyalsodier's version."
+fi
+
 # install xray execute file
 ui_print "- Install xray core $ARCH execute files"
-unzip -j -o "${download_xray_zip}" "geoip.dat" -d /data/adb/xray >&2
-unzip -j -o "${download_xray_zip}" "geosite.dat" -d /data/adb/xray >&2
+if [![ -f "/data/adb/xray/geoip.dat" ]]; then
+  unzip -j -o "${download_xray_zip}" "geoip.dat" -d /data/adb/xray >&2
+fi
+if [![ -f "/data/adb/xray/geosite.dat" ]]; then
+  unzip -j -o "${download_xray_zip}" "geosite.dat" -d /data/adb/xray >&2
+fi
 unzip -j -o "${download_xray_zip}" "xray" -d /data/adb/xray/bin >&2
 rm "${download_xray_zip}"
 

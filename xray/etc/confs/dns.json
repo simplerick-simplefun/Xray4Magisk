@@ -2,23 +2,95 @@
   "dns": {
     "hosts": {
       "domain:googleapis.cn": "googleapis.com",
-      "geosite:category-ads-all": "127.0.0.1"
+      "geosite:category-ads-all": "127.0.0.1",
+      "dns.google": "8.8.8.8",
+      "doh.pub": "120.53.53.53"
     },
     "servers": [
       {
-        "address": "https+local://1.1.1.1/dns-query",
+        "__comment__": "explicit proxy dns sites. weixin/wechat is for to have fcm, check https://github.com/Tornaco/Thanox/issues/403",
+        "address": "https://dns.google/dns-query",
+        "skipFallback": true,
+        "domains": [
+          "regexp:.*short.weixin.qq.com$",
+          "regexp:.*short.wechat.com$"
+        ]
+      },
+      {
+        "__comment__": "catch doh failure",
+        "address": "1.1.1.1",
+        "skipFallback": true,
+        "domains": [
+          "regexp:.*short.weixin.qq.com$",
+          "regexp:.*short.wechat.com$"
+        ]
+      },
+      {
+        "__comment__": "explicit direct dns sites. mtalk.google.com is for GCM/FCM direct access, remove if need to proxy. Not including geosite:cn because we catch cn sites with geoip:cn",
+        "address": "https+local://120.53.53.53/dns-query",
+        "skipFallback": true,
+        "domains": [
+          "geosite:apple-cn",
+          "geosite:google-cn",
+          "geosite:category-games@cn",
+          "full:mtalk.google.com",
+          "full:alt1-mtalk.google.com",
+          "full:alt2-mtalk.google.com",
+          "full:alt3-mtalk.google.com",
+          "full:alt4-mtalk.google.com",
+          "full:alt5-mtalk.google.com",
+          "full:alt6-mtalk.google.com",
+          "full:alt7-mtalk.google.com",
+          "full:alt8-mtalk.google.com"
+        ]
+      },
+      {
+        "__comment__": "catch doh failure",
+        "address": "223.5.5.5",
+        "skipFallback": true,
+        "domains": [
+          "geosite:apple-cn",
+          "geosite:google-cn",
+          "geosite:category-games@cn",
+          "full:mtalk.google.com",
+          "full:alt1-mtalk.google.com",
+          "full:alt2-mtalk.google.com",
+          "full:alt3-mtalk.google.com",
+          "full:alt4-mtalk.google.com",
+          "full:alt5-mtalk.google.com",
+          "full:alt6-mtalk.google.com",
+          "full:alt7-mtalk.google.com",
+          "full:alt8-mtalk.google.com"
+        ]
+      },
+      {
+        "__comment__": "implicit cn sites with cn ip via fallback.",
+        "address": "https+local://120.53.53.53/dns-query",
+        "skipFallback": false,
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "__comment__": "implicit !cn sites via fallback",
+        "address": "https://dns.google/dns-query",
+        "skipFallback": false,
         "domains": [
           "geosite:geolocation-!cn"
         ]
       },
       {
-        "address": "https+local://223.5.5.5/dns-query",
-        "domains": [
-          "geosite:cn",
-          "geosite:geolocation-cn"
-        ]
+        "__comment__": "catches doh failure",
+        "address": "223.5.5.5",
+        "skipFallback": false,
+        "expectIPs": ["geoip:cn"]
       },
-      "https+local://223.5.5.5/dns-query"
+      {
+        "__comment__": "catches doh failure",
+        "address": "1.1.1.1",
+        "skipFallback": false,
+        "domains": [
+          "geosite:geolocation-!cn"
+        ]
+      }
     ],
     "tag": "dns",
     "queryStrategy": "UseIPv4"
