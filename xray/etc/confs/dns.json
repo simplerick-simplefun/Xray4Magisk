@@ -8,12 +8,11 @@
     },
     "servers": [
       {
-        "__comment__": "explicit proxy dns sites. weixin/wechat is for to have fcm, check https://github.com/Tornaco/Thanox/issues/403",
+        "__comment__": "explicit proxy dns sites.",
         "address": "https://dns.google/dns-query",
         "skipFallback": true,
         "domains": [
-          "regexp:.*short.weixin.qq.com$",
-          "regexp:.*short.wechat.com$"
+          "regexp:.*example.example.coomomomom$"
         ]
       },
       {
@@ -21,8 +20,7 @@
         "address": "1.1.1.1",
         "skipFallback": true,
         "domains": [
-          "regexp:.*short.weixin.qq.com$",
-          "regexp:.*short.wechat.com$"
+          "regexp:.*example.example.coomomomom$"
         ]
       },
       {

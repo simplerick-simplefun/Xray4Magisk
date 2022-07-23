@@ -27,17 +27,9 @@
         "type": "field"
       },
       {
+        "__comment__": "explicit proxy sites.",
         "domains": [
-          "regexp:.*mtalk.google.com"
-        ],
-        "outboundTag": "direct",
-        "type": "field"
-      },
-      {
-        "__comment__": "explicit proxy sites. weixin/wechat is for to have fcm, check https://github.com/Tornaco/Thanox/issues/403",
-        "domains": [
-          "regexp:.*short.weixin.qq.com$",
-          "regexp:.*short.wechat.com$"
+          "regexp:.*example.example.coomomomom$"
         ],
         "outboundTag": "proxy",
         "type": "field"
@@ -47,7 +39,8 @@
         "domains": [
           "geosite:private",
           "geosite:apple-cn",
-          "geosite:google-cn"
+          "geosite:google-cn",
+          "regexp:.*mtalk.google.com"
         ],
         "outboundTag": "direct",
         "type": "field"
