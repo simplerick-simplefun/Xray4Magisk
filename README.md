@@ -4,8 +4,12 @@ English | [简体中文](README_zh_CN.md)
 
 A fork from [Asterisk4Magisk/Xray4Magisk](https://github.com/Asterisk4Magisk/Xray4Magisk)
 
-WIP
+WIP:
 
-TODO: add support for Naiveproxy, otional setting in /xray/etc/xray.config
+TODOs(from high to low priority):
 
-TODO: add optional support for Tun mode (etc. sing-box),  otional setting in /xray/etc/xray.config
+TODO: Add support for on/off switch of iptables mode (for sing-box), setting in /xray/etc/xray.config
+
+TODO: Add support for third party side running executables as custom inbounds/outbounds (like Naiveproxy), setting in /xray/etc/xray.config
+
+TODO: Add support for tun mode & on/off switch
