@@ -6,7 +6,7 @@ A fork from [Asterisk4Magisk/Xray4Magisk](https://github.com/Asterisk4Magisk/Xra
 
 WIP:
 
-TODOs(from high to low priority):
+TODOs(priority high to low ):
 
 TODO: Add support for on/off switch of iptables mode (for sing-box), setting in /xray/etc/xray.config
 
