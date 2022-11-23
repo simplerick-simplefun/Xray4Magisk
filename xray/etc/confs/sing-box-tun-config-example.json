@@ -1,0 +1,229 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "trace",
+    "output": "/data/adb/xray/run/sing-box.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-data-proxy",
+        "address": "tls://8.8.8.8",
+        "strategy": "prefer_ipv4",
+        "detour": "out-data-proxy"
+      },
+      {
+        "tag": "dns-fast-proxy",
+        "address": "tls://8.8.4.4",
+        "strategy": "ipv4_only",
+        "detour": "out-fast-proxy"
+      },
+      {
+        "tag": "dns-direct",
+        "address": "tls://223.5.5.5",
+        "strategy": "prefer_ipv4",
+        "detour": "out-direct"
+      },
+      {
+        "tag": "dns-block",
+        "address": "rcode://name_error"
+      }
+    ],
+    "rules": [
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
+        "server": "dns-block"
+      },
+      {
+        "geosite": [
+          "private"
+        ],
+        "server": "dns-direct"
+      },
+      {
+        "package_name": [
+          "com.discord",
+          "org.telegram.messenger",
+          "com.google.android.gms",
+          "com.google.android.gm",
+          "com.google.android.gsf",
+          "com.google.android.syncadapters.contact"
+        ],
+        "server": "dns-fast-proxy"
+      },
+      {
+        "package_name": [
+          "com.google.android.webview",
+          "com.google.android.documentsui",
+          "com.android.shell",
+          "com.android.chrome"
+        ],
+        "geosite": [
+          "cn",
+          "microsoft@cn",
+          "apple-cn",
+          "category-games@cn"
+        ],
+        "server": "dns-direct"
+      }
+    ],
+    "final": "dns-data-proxy",
+    "disable_cache": false,
+    "disable_expire": false
+  },
+  "route": {
+    "geoip": {
+      "download_url": "https://github.com/icepony/sing-geoip/releases/latest/download/geoip-cn.db",
+      "download_detour": "out-data-proxy"
+    },
+    "geosite": {
+      "download_url": "https://github.com/icepony/sing-geosite/releases/latest/download/geosite.db",
+      "download_detour": "out-data-proxy"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "out-dns"
+      },
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
+        "outbound": "out-blackhole"
+      },
+      {
+        "geosite": [
+          "private"
+        ],
+        "geoip": [
+          "private"
+        ],
+        "domain_keyword": "ntp",
+        "outbound": "out-direct"
+      },
+      {
+        "package_name": [
+          "com.google.android.webview",
+          "com.google.android.documentsui",
+          "com.android.shell",
+          "com.android.chrome"
+        ],
+        "geoip": [
+          "cn"
+        ],
+        "geosite": [
+          "cn",
+          "microsoft@cn",
+          "apple@cn",
+          "category-games@cn"
+        ],
+        "outbound": "out-direct"
+      },
+      {
+        "package_name": [
+          "com.discord",
+          "org.telegram.messenger",
+          "com.google.android.gms",
+          "com.google.android.gm",
+          "com.google.android.gsf",
+          "com.google.android.syncadapters.contact"
+        ],
+        "outbound": "out-fast-proxy"
+      }
+    ],
+    "final": "out-data-proxy",
+    "auto_detect_interface": true,
+    "override_android_vpn": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "in-tun",
+      "inet4_address": "172.19.0.1/30",
+      "inet6_address": "fdfe:dcba:9876::1/126",
+      "auto_route": true,
+      "strict_route": true,
+      "stack": "gvisor",
+      "include_uid": [
+        10111,
+        10222,
+        10333,
+        10444
+      ],
+      "sniff": true,
+      "sniff_override_destination": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "out-direct"
+    },
+    {
+      "type": "block",
+      "tag": "out-blackhole"
+    },
+    {
+      "type": "dns",
+      "tag": "out-dns"
+    },
+    {
+      "tag": "out-data-proxy",
+      "type": "selector",
+      "outbounds": [
+        "out-data_proxy_1",
+        "out-data_proxy_2",
+        "out-data_proxy_3"
+      ],
+      "default": "out-data_proxy_1"
+    },
+    {
+      "tag": "out-fast-proxy",
+      "type": "vmess",
+      "server": "i.p.i.p",
+      "server_port": 12345,
+      "uuid": "67a1182e-5941-4264-8617-4e5586d86b91",
+      "domain_strategy": "ipv4_only"
+    },
+    {
+      "tag": "out-data_proxy_1",
+      "type": "trojan",
+      "server": "i.p.i.p",
+      "server_port": 443,
+      "password": "password1",
+      "tls": {
+        "enabled": true,
+        "disable_sni": false,
+        "server_name": "123.example.com",
+        "insecure": false
+      },
+      "domain_strategy": "ipv4_only"
+    },
+    {
+      "tag": "out-data_proxy_2",
+      "type": "trojan",
+      "server": "i:p:i:p:i:p:i:p",
+      "server_port": 443,
+      "password": "password2",
+      "tls": {
+        "enabled": true,
+        "disable_sni": false,
+        "server_name": "456.example.com",
+        "insecure": false
+      },
+      "domain_strategy": "prefer_ipv6"
+    },
+    {
+      "tag": "out-data_proxy_1",
+      "type": "shadowsocks",
+      "server": "i.p.i.p",
+      "server_port": 56789,
+      "method": "2022-blake3-chacha20-poly1305",
+      "password": "password",
+      "domain_strategy": "ipv4_only"
+    }
+  ]
+}
